@@ -1,0 +1,147 @@
+/*==============================================================*/
+/* CREATE TABLES BY Tomy Anchundia                              */
+/*==============================================================*/
+/*==============================================================*/
+/* Table: CLIENTE                                               */
+/*==============================================================*/
+create table CLIENTE  (
+   ID_CLIENTE           INTEGER                          not null,
+   NOMBRE_CLIENTE       CHAR(30),
+   DIRECCION_CLIENTE    CHAR(30),
+   TELEFONO_CLIENTE     CHAR(30),
+   constraint PK_CLIENTE primary key (ID_CLIENTE)
+);
+
+/*==============================================================*/
+/* Table: DETALLE_VENTA                                         */
+/*==============================================================*/
+create table DETALLE_VENTA  (
+   ID_DETALLE_VENTA     INTEGER                          not null,
+   ID_VENTA             INTEGER                          not null,
+   ID_PRODUCTO          INTEGER                          not null,
+   CANTIDAD_PRODUCTO    INTEGER,
+   PRECIO_PRODUCTO      NUMBER,
+   TOTAL_DETALLE_VENTA  NUMBER,
+   constraint PK_DETALLE_VENTA primary key (ID_DETALLE_VENTA)
+);
+
+/*==============================================================*/
+/* Table: ESTADO                                                */
+/*==============================================================*/
+create table ESTADO  (
+   ID_ESTADO            INTEGER                          not null,
+   NOMBRE_ESTADO        CHAR(20),
+   constraint PK_ESTADO primary key (ID_ESTADO)
+);
+
+/*==============================================================*/
+/* Table: PRODUCTO                                              */
+/*==============================================================*/
+create table PRODUCTO  (
+   ID_PRODUCTO          INTEGER                          not null,
+   ID_PROVEEDOR         INTEGER                          not null,
+   NOMBRE_PRODUCTO      CHAR(50),
+   COSTO_PRODUCTO       NUMBER,
+   PRECIO_PRODUCTO      NUMBER,
+   F_VENCIMIENTO_PRODUCTO DATE,
+   STOCK_PRODUCTO       INTEGER,
+   constraint PK_PRODUCTO primary key (ID_PRODUCTO)
+);
+
+/*==============================================================*/
+/* Table: PROVEEDOR                                             */
+/*==============================================================*/
+create table PROVEEDOR  (
+   ID_PROVEEDOR         INTEGER                          not null,
+   NOMBRE_PROVEEDOR     CHAR(50),
+   DIRECCION_PROVEEDOR  CHAR(40),
+   TELEFONO_PROVEEDOR   CHAR(20),
+   constraint PK_PROVEEDOR primary key (ID_PROVEEDOR)
+);
+
+/*==============================================================*/
+/* Table: SUCURSAL                                              */
+/*==============================================================*/
+create table SUCURSAL  (
+   ID_SUCURSAL          INTEGER                          not null,
+   DIRECCION_SUCURSAL   CHAR(50),
+   TELEFONO_SUCURSAL    CHAR(50),
+   constraint PK_SUCURSAL primary key (ID_SUCURSAL)
+);
+
+/*==============================================================*/
+/* Table: SUCURSAL_PROVEEDOR                                    */
+/*==============================================================*/
+create table SUCURSAL_PROVEEDOR  (
+   ID_SUCURSAL_PROVEEDOR INTEGER                     not null,
+   ID_SUCURSAL      INTEGER                          not null,
+   ID_PROVEEDOR     INTEGER                          not null,
+   constraint PK_SUCURSAL_PROVEEDOR primary key (ID_SUCURSAL_PROVEEDOR)
+);
+
+/*==============================================================*/
+/* Table: VENDEDOR                                              */
+/*==============================================================*/
+create table VENDEDOR  (
+   ID_VENDEDOR      INTEGER                          not null,
+   ID_SUCURSAL      INTEGER                          not null,
+   ID_ESTADO            INTEGER                          not null,
+   NOMBRE_VENDEDOR     CHAR(30),
+   APELLIDO_VENDEDOR   CHAR(30),
+   FECHA_NACIMIENTO_VENDEDOR DATE,
+   FECHA_INGRESO_LABORAL    DATE,
+   TELFONO_VENDEDOR        CHAR(20),
+   SUELDO_MENSUAL       NUMBER,
+   constraint PK_VENDEDOR primary key (ID_VENDEDOR)
+);
+
+/*==============================================================*/
+/* Table: VENTA                                                 */
+/*==============================================================*/
+create table VENTA  (
+   ID_VENTA             INTEGER                          not null,
+   ID_VENDEDOR      INTEGER                          not null,
+   ID_CLIENTE       INTEGER                          not null,
+   DESCUENTO_VENTA      INTEGER,
+   TOTAL_VENTA          NUMBER,
+   FECHA_VENTA          DATE,
+   TOTAL_DESCUENTO      NUMBER,
+   constraint PK_VENTA primary key (ID_VENTA)
+);
+
+alter table DETALLE_VENTA
+   add constraint FK_DETALLE__RELATIONS_VENTA foreign key (ID_VENTA)
+      references VENTA (ID_VENTA);
+
+alter table DETALLE_VENTA
+   add constraint FK_DETALLE__RELATIONS_PRODUCTO foreign key (ID_PRODUCTO)
+      references PRODUCTO (ID_PRODUCTO);
+
+alter table PRODUCTO
+   add constraint FK_PRODUCTO_ADQUIERE_PROVEEDO foreign key (ID_PROVEEDOR)
+      references PROVEEDOR (ID_PROVEEDOR);
+
+alter table SUCURSAL_PROVEEDOR
+   add constraint FK_SUCURSAL_COMPRA2_PROVEEDO foreign key (ID_PROVEEDOR)
+      references PROVEEDOR (ID_PROVEEDOR);
+
+alter table SUCURSAL_PROVEEDOR
+   add constraint FK_SUCURSAL_TIENEN_SUCURSAL foreign key (ID_SUCURSAL)
+      references SUCURSAL (ID_SUCURSAL);
+
+alter table VENDEDOR
+   add constraint FK_VENDEDOR_RELATIONS_ESTADO foreign key (ID_ESTADO)
+      references ESTADO (ID_ESTADO);
+
+alter table VENDEDOR
+   add constraint FK_VENDEDOR_TIENE_SUCURSAL foreign key (ID_SUCURSAL)
+      references SUCURSAL (ID_SUCURSAL);
+
+alter table VENTA
+   add constraint FK_VENTA_REALIZA_CLIENTE foreign key (ID_CLIENTE)
+      references CLIENTE (ID_CLIENTE);
+
+alter table VENTA
+   add constraint FK_VENTA_VENDE_VENDEDOR foreign key (ID_VENDEDOR)
+      references VENDEDOR (ID_VENDEDOR);
+
