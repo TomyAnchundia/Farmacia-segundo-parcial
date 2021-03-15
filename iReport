@@ -1,0 +1,8 @@
+/*==================================================================*/
+/* reporte en ireport usando gráficos estadísticos a                */
+/*su base de datos.                                                 */
+/*==================================================================*/
+SELECT sucursal.direccion_sucursal, count(id_venta) as Total_ventas FROM VENTA
+inner join vendedor on venta.id_vendedor=vendedor.id_vendedor
+inner join sucursal on vendedor.id_sucursal= sucursal.id_sucursal
+group by sucursal.direccion_sucursal
