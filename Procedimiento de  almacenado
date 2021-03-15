@@ -1,0 +1,24 @@
+/*==================================================================*/
+/* Un procedimiento almacenado al que se le ingrese el              */
+/* nombre de un empleado, y retorne los nombres, apellidos de todos */
+/* los subalternos que haya tenido.                                 */
+/*==================================================================*/
+create or replace function ver_subalternos (vendedorid char)
+	returns table (
+	codigo integer,
+		
+	nombre char,
+	apellido char
+	)
+	as $BODY$
+	begin 
+	return query 
+	select * from subalterno
+	inner join subalterno on vendedor.id_vendedor = subalterno.id_vendedor
+	where vendedor.nombre_vendedor = vendedorid;
+	end
+	$BODY$ language plpgsql;
+	
+
+
+select * from ver_subalternos('Tomy');
