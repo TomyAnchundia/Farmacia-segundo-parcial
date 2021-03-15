@@ -1,0 +1,21 @@
+/*==================================================================*/
+/* un cursor que muestre por cada sucursal cuanto se ha             */
+/*  dado mensualmente en descuentos.                                */
+/*==================================================================*/
+do $$
+declare
+	registro Record;
+
+	cur_descuento_mensual Cursor for select sucursal.direccion_sucursal, 
+	sum(total_descuento) as descuento_mensual from venta, sucursal, vendedor
+	where venta.id_vendedor = vendedor.id_vendedor
+	and vendedor.id_sucursal= sucursal.id_sucursal
+	and venta.fecha_venta= '2021/01/10'	
+	group by sucursal.direccion_sucursal ;
+	
+begin 
+	for registro in cur_descuento_mensual loop
+	Raise notice 'La sucursal: % , ha tenido un descuento de: %', registro.direccion_sucursal, registro.descuento_mensual;
+	end loop;
+end $$
+language 'plpgsql'; 
